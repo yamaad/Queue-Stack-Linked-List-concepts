@@ -8,6 +8,9 @@ const int MAX_SIZE = 5;
 
 class IQueuable
 {
+protected:
+  int first, last, length;
+  string queueNo[MAX_SIZE];
 
 public:
   // adds value to queue and returns new queue
@@ -21,34 +24,21 @@ public:
 
   // returns the number of items in the queue
   virtual int size() = 0;
+
+  // for display purpose
+  virtual void display() = 0;
 };
 
 // Queue class
 class Queue : public IQueuable
 {
-private:
-  int front, rear, length;
-  string queueNo[MAX_SIZE];
-
 public:
   // contructor
   Queue()
   {
-    front = 0;
-    rear = MAX_SIZE - 1;
+    first = 0;
+    last = MAX_SIZE - 1;
     length = 0;
-  }
-
-  // accessor method for the first one in the queue
-  int getFront()
-  {
-    return this->front;
-  }
-
-  // accessor method for the last one in the queue
-  int getRear()
-  {
-    return this->rear;
   }
 
   // adds value to queue and returns new queue
@@ -61,8 +51,8 @@ public:
     }
     else
     {
-      rear = (rear + 1) % MAX_SIZE;
-      queueNo[rear] = value;
+      last = (last + 1) % MAX_SIZE;
+      queueNo[last] = value;
       length++;
     }
 
@@ -75,8 +65,8 @@ public:
     string value = "empty Queue";
     if (length != 0)
     {
-      value = queueNo[front];
-      front = (front + 1) % MAX_SIZE;
+      value = queueNo[first];
+      first = (first + 1) % MAX_SIZE;
       --length;
     }
 
@@ -94,40 +84,98 @@ public:
   {
     return length;
   }
+
+  // display method definition
+  void display()
+  {
+
+    cout << "currently in queue:" << endl;
+    for (int i = first; i != last; i = (i + 1) % MAX_SIZE)
+    {
+      if (size() == 0)
+        break;
+      cout << queueNo[i] << endl;
+    }
+    cout << queueNo[last] << endl
+         << endl;
+  }
 };
 
-// for display purpose
-void display(string *list, Queue q)
+// Stack class
+class Stack : public IQueuable
 {
-
-  cout
-      << "currently in queue:" << endl;
-  for (int i = q.getFront(); i != q.getRear(); i = (i + 1) % MAX_SIZE)
+public:
+  // contructor
+  Stack()
   {
-    if (q.size() == 0)
-      break;
-    cout << list[i] << endl;
+    first = 0;
+    last = -1;
+    length = last + 1;
   }
-  cout << list[q.getRear()] << endl
-       << endl;
-}
+
+  // adds value to queue and returns new queue
+  string *enqueue(string value)
+  {
+    if (last == MAX_SIZE - 1)
+    {
+      cout << "Stack is full...!" << endl;
+    }
+    else
+    {
+      last++;
+      queueNo[last] = value;
+    }
+    return queueNo;
+  }
+
+  // removes item from queue, and returns the item removed
+  string dequeue()
+  {
+    string value = "empty Queue";
+    if (last >= 0)
+    {
+      value = queueNo[last];
+      last--;
+    }
+
+    return value;
+  }
+
+  // returns a list of all the items in the queue
+  string *getQueue()
+  {
+    return queueNo;
+  }
+
+  // returns the number of items in the queue
+  int size()
+  {
+    length = last + 1;
+    return length;
+  }
+
+  // display method definition
+  void display()
+  {
+
+    cout << "currently in queue:" << endl;
+    for (int i = last; i >= first; i--)
+    {
+      cout << queueNo[i] << endl;
+    }
+  }
+};
 
 int main()
 {
-  // IQueuable *queue;
-  // queue = new Queue();
+  IQueuable *queue;
+  IQueuable *stack;
+  queue = new Queue();
+  stack = new Stack();
   // string arr[MAX_SIZE] = queue->getQueue();
-  Queue queue;
+  // Queue queue;
 
-  display(queue.enqueue("101"), queue);
-  display(queue.enqueue("102"), queue);
-  display(queue.enqueue("103"), queue);
-  display(queue.enqueue("104"), queue);
-  display(queue.enqueue("105"), queue);
-  cout << queue.dequeue() << endl;
-  display(queue.enqueue("106"), queue);
-  display(queue.enqueue("107"), queue);
-  display(queue.enqueue("108"), queue);
-  display(queue.enqueue("109"), queue);
-  display(queue.enqueue("110"), queue);
+  queue->enqueue("101");
+
+  stack->enqueue("101");
 }
