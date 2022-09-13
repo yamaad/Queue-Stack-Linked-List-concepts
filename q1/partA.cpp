@@ -85,7 +85,6 @@ public:
   // returns a list of all the items in the queue
   string *getQueue()
   {
-
     return queueNo;
   }
 
@@ -96,17 +95,35 @@ public:
   }
 };
 
+// for display purpose
+void display(Queue q)
+{
+  string *list = q.getQueue();
+  for (int i = q.getFront(); i != q.getRear() + 1; i = (i + 1) % MAX_SIZE)
+  {
+    if (q.size() == 0)
+      break;
+    cout << endl
+         << list[i];
+  }
+}
+
 int main()
 {
   // IQueuable *queue;
   // queue = new Queue();
   // string arr[MAX_SIZE] = queue->getQueue();
-  cout << "hello";
-  Queue queue;
-  string *list = queue.getQueue();
+  // Queue queue;
+  // string *list = queue.getQueue();
 
-  for (size_t i = queue.getFront(); i != queue.getRear() + 1; i = (i + 1) % MAX_SIZE)
-  {
-    cout << list[i];
-  }
+  display(queu.en)
+  // display()
+  //     queue.enqueue("101");
+  // queue.enqueue("102");
+  // queue.enqueue("103");
+  // queue.enqueue("104");
+  // queue.enqueue("105");
+  // queue.enqueue("106");
+  // queue.enqueue("107");
+  // queue.enqueue("108");
 }
