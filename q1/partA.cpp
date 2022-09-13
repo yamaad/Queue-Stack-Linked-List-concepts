@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int MAX_SIZE = 50;
+const int MAX_SIZE = 5;
 
 // interface IQueuable
 
@@ -23,7 +23,7 @@ public:
   virtual int size() = 0;
 };
 
-// class Queue
+// Queue class
 class Queue : public IQueuable
 {
 private:
@@ -56,7 +56,8 @@ public:
   {
     if (length == MAX_SIZE)
     {
-      cout << "Queue is Full, Please wait..!";
+      cout << "\n\n"
+           << "Queue is Full, Please wait..!" << endl;
     }
     else
     {
@@ -96,16 +97,19 @@ public:
 };
 
 // for display purpose
-void display(Queue q)
+void display(string *list, Queue q)
 {
-  string *list = q.getQueue();
-  for (int i = q.getFront(); i != q.getRear() + 1; i = (i + 1) % MAX_SIZE)
+
+  cout
+      << "currently in queue:" << endl;
+  for (int i = q.getFront(); i != q.getRear(); i = (i + 1) % MAX_SIZE)
   {
     if (q.size() == 0)
       break;
-    cout << endl
-         << list[i];
+    cout << list[i] << endl;
   }
+  cout << list[q.getRear()] << endl
+       << endl;
 }
 
 int main()
@@ -113,17 +117,17 @@ int main()
   // IQueuable *queue;
   // queue = new Queue();
   // string arr[MAX_SIZE] = queue->getQueue();
-  // Queue queue;
-  // string *list = queue.getQueue();
+  Queue queue;
 
-  display(queu.en)
-  // display()
-  //     queue.enqueue("101");
-  // queue.enqueue("102");
-  // queue.enqueue("103");
-  // queue.enqueue("104");
-  // queue.enqueue("105");
-  // queue.enqueue("106");
-  // queue.enqueue("107");
-  // queue.enqueue("108");
+  display(queue.enqueue("101"), queue);
+  display(queue.enqueue("102"), queue);
+  display(queue.enqueue("103"), queue);
+  display(queue.enqueue("104"), queue);
+  display(queue.enqueue("105"), queue);
+  cout << queue.dequeue() << endl;
+  display(queue.enqueue("106"), queue);
+  display(queue.enqueue("107"), queue);
+  display(queue.enqueue("108"), queue);
+  display(queue.enqueue("109"), queue);
+  display(queue.enqueue("110"), queue);
 }
