@@ -7,24 +7,24 @@ using namespace std;
 class IQueuable
 {
 protected:
-  struct node
+  struct Node
   {
     string item;
-    node *next;
+    Node *next;
   };
 
-  node *first, *last, *current;
+  Node *first, *last, *current;
   int length;
 
 public:
   // adds value to queue and returns new queue
-  virtual string enqueue(string value) = 0;
+  virtual Node *enqueue(string value) = 0;
 
   // removes item from queue, and returns the item removed
   virtual string dequeue() = 0;
 
   // returns a list of all the items in the queue
-  virtual node *getQueue() = 0;
+  virtual Node *getQueue() = 0;
 
   // returns the number of items in the queue
   virtual int size() = 0;
@@ -41,31 +41,81 @@ public:
   // contructor
   Queue()
   {
+    first = last = current = NULL;
+    length = 0;
   }
 
   // adds value to queue and returns new queue
-  string enqueue(string value)
+  Node *enqueue(string value)
   {
+    if (first == NULL)
+    {
+      first = new Node;
+      first->item = value;
+      first->next = NULL;
+      last = first;
+      length++;
+    }
+    else
+    {
+      Node *newItem = new Node();
+      newItem->item = value;
+      newItem->next = NULL;
+      last->next = newItem;
+      last = newItem;
+
+      length++;
+    }
+    cout << "item has been added to the queue: " << first->item << endl;
+
+    return first;
   }
 
   // removes item from queue, and returns the item removed
   string dequeue()
   {
+    string store = "There's no queue...!";
+    if (first != NULL)
+    {
+      Node *temp = first;
+      store = first->item;
+      if (first == last)
+      {
+        first = last = NULL;
+      }
+      else
+      {
+        first = first->next;
+        temp->next = NULL;
+        delete temp;
+      }
+      cout << "item has been dequeued: " << store << endl;
+    }
+    length--;
+    return store;
   }
 
   // returns a list of all the items in the queue
-  node *getQueue()
+  Node *getQueue()
   {
+    return first;
   }
 
   // returns the number of items in the queue
   int size()
   {
+    return length;
   }
 
   // display method definition
   void display()
   {
+    current = first;
+    while (current != NULL)
+    {
+      cout << current->item << endl;
+      current = current->next;
+    }
   }
 };
 
@@ -82,22 +132,15 @@ public:
   }
 
   // adds value to queue and returns new queue
-  string enqueue(string value)
+  Node *enqueue(string value)
   {
-    node *newItem = new node;
+    Node *newItem = new Node;
+    newItem->item = value;
+    newItem->next = last;
+    last = newItem;
+    cout << "item has been stacked: " << last->item << endl;
 
-    if (newItem == NULL)
-    {
-      cout << "Stack enqueue cannot allocate a memory";
-    }
-    else
-    {
-      newItem->item = value;
-      newItem->next = last;
-      last = newItem;
-      cout << "item has been stacked" << endl;
-    }
-    return last->item;
+    return last;
   }
 
   // removes item from queue, and returns the item removed
@@ -107,17 +150,17 @@ public:
     if (last != NULL)
     {
       store = last->item;
-      node *temp = last;
+      Node *temp = last;
       last = last->next;
       temp = temp->next = NULL;
       delete temp;
-      cout << "item has been unstacked" << endl;
+      cout << "item has been unstacked: " << store << endl;
     }
     return store;
   }
 
   // returns a list of all the items in the queue
-  node *getQueue()
+  Node *getQueue()
   {
     return last;
   }
@@ -215,7 +258,7 @@ void testing(IQueuable *queue)
     case '1':
       cout << "input item to the queue/stack value:";
       cin >> item;
-      cout << queue->enqueue(item) << endl;
+      queue->enqueue(item);
       break;
 
     case '2':
