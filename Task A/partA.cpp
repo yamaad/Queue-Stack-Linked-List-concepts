@@ -194,6 +194,7 @@ int main()
     printStar();
     cout << "please input your choose (1-3):";
     cin >> choice;
+    cin.ignore(10, '\n');
     switch (choice)
     {
     case '1':
@@ -222,9 +223,6 @@ int main()
 
 void testing(IQueuable *queue)
 {
-  printStar();
-  cout << "\nQueue class test" << endl;
-  printStar();
 
   string item;
   char choice;
@@ -235,13 +233,13 @@ void testing(IQueuable *queue)
     printStar();
     cout << "please input your choose(1-5):";
     cin >> choice;
+    cin.ignore(10, '\n');
     switch (choice)
     {
     case '1':
       cout << "input item to the queue/stack value:";
       cin >> item;
-      queue->enqueue(item);
-      queue->display();
+      cout << queue->enqueue(item) << endl;
       break;
 
     case '2':

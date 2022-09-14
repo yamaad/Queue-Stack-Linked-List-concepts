@@ -2,105 +2,70 @@
 
 using namespace std;
 
-const int MAX_SIZE = 50;
-
 // interface IQueuable
 
 class IQueuable
 {
 protected:
-  int first, last, length;
-  string item[MAX_SIZE];
+  struct node
+  {
+    string item;
+    node *next;
+  };
+
+  node *first, *last, *current;
+  int length;
 
 public:
   // adds value to queue and returns new queue
-  virtual string *enqueue(string value) = 0;
+  virtual string enqueue(string value) = 0;
 
   // removes item from queue, and returns the item removed
   virtual string dequeue() = 0;
 
   // returns a list of all the items in the queue
-  virtual string *getQueue() = 0;
+  virtual node *getQueue() = 0;
 
   // returns the number of items in the queue
-  virtual int
-  size() = 0;
+  virtual int size() = 0;
 
   // for display purpose
   virtual void display() = 0;
 };
 
 // Queue class
+
 class Queue : public IQueuable
 {
 public:
   // contructor
   Queue()
   {
-    first = 0;
-    last = MAX_SIZE - 1;
-    length = 0;
   }
 
   // adds value to queue and returns new queue
-  string *enqueue(string value)
+  string enqueue(string value)
   {
-    if (length == MAX_SIZE)
-    {
-      cout << "\n\n"
-           << "Queue is Full, Please wait..!" << endl;
-    }
-    else
-    {
-      last = (last + 1) % MAX_SIZE;
-      item[last] = value;
-      length++;
-      cout << "item [ " << value << " ] has been added to the queue\n\n";
-    }
-
-    return item;
   }
 
   // removes item from queue, and returns the item removed
   string dequeue()
   {
-    string value = "empty Queue...!";
-    if (length != 0)
-    {
-      value = item[first];
-      first = (first + 1) % MAX_SIZE;
-      --length;
-      cout << "item has been dequeued " << endl;
-    }
-
-    return value;
   }
 
   // returns a list of all the items in the queue
-  string *getQueue()
+  node *getQueue()
   {
-    return item;
   }
 
   // returns the number of items in the queue
   int size()
   {
-    return length;
   }
 
   // display method definition
   void display()
   {
-
-    cout << "currently in queue:" << endl;
-    for (int i = first; i != last; i = (i + 1) % MAX_SIZE)
-    {
-      if (size() == 0)
-        break;
-      cout << item[i] << endl;
-    }
-    cout << item[last] << endl
-         << endl;
   }
 };
 
@@ -111,62 +76,73 @@ public:
   // contructor
   Stack()
   {
-    first = 0;
-    last = -1;
-    length = last + 1;
+    first = NULL;
+    last = NULL;
+    length = 0;
   }
 
   // adds value to queue and returns new queue
-  string *enqueue(string value)
+  string enqueue(string value)
   {
-    if (last == MAX_SIZE - 1)
+    node *newItem = new node;
+
+    if (newItem == NULL)
     {
-      cout << "Stack is full...!" << endl;
+      cout << "Stack enqueue cannot allocate a memory";
     }
     else
     {
-      last++;
-      item[last] = value;
-      cout << "item [ " << value << " ] has been added to the stack\n\n";
+      newItem->item = value;
+      newItem->next = last;
+      last = newItem;
+      cout << "item has been stacked" << endl;
     }
-    return item;
+    return last->item;
   }
 
   // removes item from queue, and returns the item removed
   string dequeue()
   {
-    string value = "empty Stack...!";
-    if (last >= 0)
+    string store = "Stack is empty...!";
+    if (last != NULL)
     {
-      value = item[last];
-      last--;
-      cout << "item has been unstacked " << endl;
+      store = last->item;
+      node *temp = last;
+      last = last->next;
+      temp = temp->next = NULL;
+      delete temp;
+      cout << "item has been unstacked" << endl;
     }
-
-    return value;
+    return store;
   }
 
   // returns a list of all the items in the queue
-  string *getQueue()
+  node *getQueue()
   {
-    return item;
+    return last;
   }
 
   // returns the number of items in the queue
   int size()
   {
-    length = last + 1;
+    length = 0;
+    current = last;
+    while (current != NULL)
+    {
+      length++;
+      current = current->next;
+    }
     return length;
   }
 
   // display method definition
   void display()
   {
-
-    cout << "currently in Stack:" << endl;
-    for (int i = last; i >= first; i--)
+    current = last;
+    while (current != NULL)
     {
-      cout << item[i] << endl;
+      cout << current->item << endl;
+      current = current->next;
     }
   }
 };
@@ -194,6 +170,7 @@ int main()
     printStar();
     cout << "please input your choose (1-3):";
     cin >> choice;
+    cin.ignore(10, '\n');
     switch (choice)
     {
     case '1':
@@ -222,9 +199,6 @@ int main()
 
 void testing(IQueuable *queue)
 {
-  printStar();
-  cout << "\nQueue class test" << endl;
-  printStar();
 
   string item;
   char choice;
@@ -235,17 +209,17 @@ void testing(IQueuable *queue)
     printStar();
     cout << "please input your choose(1-5):";
     cin >> choice;
+    cin.ignore(10, '\n');
     switch (choice)
     {
     case '1':
       cout << "input item to the queue/stack value:";
       cin >> item;
-      queue->enqueue(item);
-      queue->display();
+      cout << queue->enqueue(item) << endl;
       break;
 
     case '2':
-      cout << queue->dequeue() << endl;
+      queue->dequeue();
       break;
     case '3':
       queue->display();
